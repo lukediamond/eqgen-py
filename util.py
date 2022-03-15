@@ -16,21 +16,10 @@ def parse_eq(eq):
 def serialize_eq(points):
     return "GraphicEQ: " + "; ".join(map(lambda x: " ".join(map(lambda x: str(round(x, 4)), x)), points))
 
-def normalize_eq(inpoints):
+def weight_eq(inpoints):
     points = np.array(inpoints)
     # apply equal-loudness curve
     points[:, 1] *= np.vectorize(a_weight)(points[:, 0])
-
-    total = 0
-    totalfac = 0
-    for i in range(1, len(points)):
-        [fa, ga], [fb, gb] = points[i - 1], points[i]
-        fac = 0.5 * (fb - fa) * (a_weight(fa) + a_weight(fb))
-        a, b = from_dB(ga), from_dB(gb)
-
-        total += 0.5 * (a + b) * fac
-        totalfac += fac
-    points[:, 1] = vto_dB(vfrom_dB(points[:, 1]) / (total / totalfac))
 
     return points
 

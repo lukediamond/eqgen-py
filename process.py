@@ -1,4 +1,4 @@
-from util import to_dB, serialize_eq, normalize_eq, clean_interval
+from util import to_dB, serialize_eq, weight_eq, clean_interval
 import numpy as np
 from scipy import signal
 import struct
@@ -17,5 +17,5 @@ sigdens = np.stack((sigdens[0], sigdens[1]), axis=1)[1:]
 sigdens[:, 1] /= np.mean(sigdens[1:, 1] * sigdens[1:, 0])
 
 ineq = np.stack((sigdens[:, 0], np.vectorize(to_dB)(sigdens[:, 0] * sigdens[:, 1])), axis=1)
-outeq = clean_interval(normalize_eq(ineq), num=OUT_BANDS)
+outeq = clean_interval(weight_eq(ineq), num=OUT_BANDS)
 print(serialize_eq(outeq))
